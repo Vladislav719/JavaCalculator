@@ -25,7 +25,7 @@ public class Calc {
         }
     }
 
-    private void procOperator(LinkedList<Integer> list, char oper){
+    private void procOperator(LinkedList<Integer> list, char oper) throws ArithmeticException{
         int r = list.removeLast();
         int l = list.removeLast();
         switch (oper){

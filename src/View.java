@@ -6,21 +6,23 @@ import java.awt.*;
  */
 public class View extends JFrame {
 
+    private String memExp = "";
+
     private Calc calc = new Calc();
 
     public static void main(String[] args) {
         new View();
     }
 
-    public View(){
-        setBounds(300,300,360, 420);
+    public View() {
+        setBounds(300, 300, 360, 420);
         setLayout(new BorderLayout());
         initFrame();
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private void initFrame(){
+    private void initFrame() {
         add(display, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
 //        add(buttonExp, BorderLayout.SOUTH);
@@ -42,13 +44,16 @@ public class View extends JFrame {
         buttonPanel.add(buttonOpenBracket);
         buttonPanel.add(buttonCloseBracket);
         buttonPanel.add(buttonExp);
+        buttonPanel.add(buttonMem);
+        buttonPanel.add(buttonMemRec);
+        buttonPanel.add(buttonMemDel);
 //        display.setEnabled(false);
         initListener();
     }
 
     private JTextArea display = new JTextArea();
 
-    private JPanel buttonPanel = new JPanel(new GridLayout(6,3));
+    private JPanel buttonPanel = new JPanel(new GridLayout(7, 3));
 
     private JButton button0 = new JButton("0");
 
@@ -86,8 +91,14 @@ public class View extends JFrame {
 
     private JButton buttonCloseBracket = new JButton(")");
 
-    private void initListener(){
-        button0.addActionListener(e -> display.setText(display.getText()+"0"));
+    private JButton buttonMem = new JButton("M+");//add to memory
+
+    private JButton buttonMemDel = new JButton("M-");//remove from memory
+
+    private JButton buttonMemRec = new JButton("MR");//memory recall
+
+    private void initListener() {
+        button0.addActionListener(e -> display.setText(display.getText() + "0"));
         button1.addActionListener(e -> display.setText(display.getText() + "1"));
         button2.addActionListener(e -> display.setText(display.getText() + "2"));
         button3.addActionListener(e -> display.setText(display.getText() + "3"));
@@ -98,23 +109,66 @@ public class View extends JFrame {
         button8.addActionListener(e -> display.setText(display.getText() + "8"));
         button9.addActionListener(e -> display.setText(display.getText() + "9"));
         buttonSum.addActionListener(e -> display.setText(display.getText() + "+"));
-        buttonDel.addActionListener(e -> display.setText(display.getText().substring(0,display.getText().length()-1)));
+        buttonDel.addActionListener(e -> display.setText(display.getText().substring(0, display.getText().length() - 1)));
         buttonDivide.addActionListener(e -> display.setText(display.getText() + "/"));
         buttonSub.addActionListener(e -> display.setText(display.getText() + "-"));
         buttonMul.addActionListener(e -> display.setText(display.getText() + "*"));
         buttonOpenBracket.addActionListener(e -> display.setText(display.getText() + "("));
         buttonCloseBracket.addActionListener(e -> display.setText(display.getText() + ")"));
+        buttonMemDel.addActionListener(e -> memExp = "");
+
+        buttonMemDel.addActionListener(e -> this.memExp = "");
+
+        buttonMem.addActionListener(e -> {
+            String exp = display.getText();
+            if (!exp.matches("^[0-9\\/\\*\\+\\-\\(\\)]*$")) {
+                JOptionPane.showMessageDialog(this, "Is not permitted in this scope", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (exp.charAt(exp.length() - 1) == '+' || exp.charAt(exp.length() - 1) == '-'
+                        || exp.charAt(exp.length() - 1) == '/' || exp.charAt(exp.length() - 1) == '*') {
+                    exp = exp.substring(0, exp.length() - 1);
+                }
+                int res = calc.express(exp);
+                memExp = "" + res;
+//                Timer timer = new Timer(500, ex -> display.setBackground(Color.GREEN));
+            }
+        });
+
+//        System.out.println("123".substring(0,"123".length()-1));
+
+        buttonMemRec.addActionListener(e -> {
+            if (memExp != "") {
+                Integer getMem = Integer.parseInt(memExp);
+                String temp = display.getText().trim();
+                if (getMem >= 0) {
+                    if (temp.charAt(temp.length() - 1) == '+' || temp.charAt(temp.length() - 1) == '-'
+                            || temp.charAt(temp.length() - 1) == '/' || temp.charAt(temp.length() - 1) == '*') {
+                        display.setText(display.getText() + getMem);
+                    } else {
+                        display.setText(display.getText() + "+" + getMem);
+                    }
+                } else {
+                    if (temp.charAt(temp.length() - 1) == '+' || temp.charAt(temp.length() - 1) == '-'
+                            || temp.charAt(temp.length() - 1) == '/' || temp.charAt(temp.length() - 1) == '*') {
+                        display.setText(display.getText() + "(" + getMem + ")");
+                    } else {
+                        display.setText(display.getText() + getMem);
+                    }
+
+                }
+            } else ;
+        });
 
         buttonExp.addActionListener(e -> {
             String exp = display.getText();
-            if (!exp.matches("^[0-9\\/\\*\\+\\-\\(\\)]*$") ){
+            if (!exp.matches("^[0-9\\/\\*\\+\\-\\(\\)]*$")) {
 //                System.out.println(true);
-                JOptionPane.showMessageDialog(this, "Typing error","Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Typing error", "Error", JOptionPane.ERROR_MESSAGE);
                 display.setText("");
-            }else {
+            } else {
 //                System.out.println(false);
                 int res = calc.express(exp);
-                display.setText(res +"");
+                display.setText(res + "");
             }
         });
     }
