@@ -15,12 +15,13 @@ public class View extends JFrame {
         setLayout(new BorderLayout());
         initFrame();
         setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void initFrame(){
         add(display, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
-        add(buttonEval, BorderLayout.SOUTH);
+        add(buttonExp, BorderLayout.SOUTH);
         buttonPanel.add(button0);
         buttonPanel.add(button1);
         buttonPanel.add(button2);
@@ -36,6 +37,8 @@ public class View extends JFrame {
         buttonPanel.add(buttonMul);
         buttonPanel.add(buttonDel);
         buttonPanel.add(buttonDivide);
+//        display.setEnabled(false);
+        initListener();
     }
 
     private JTextArea display = new JTextArea();
@@ -72,5 +75,34 @@ public class View extends JFrame {
 
     private JButton buttonMul = new JButton("*");
 
-    private JButton buttonEval = new JButton("=");
+    private JButton buttonExp = new JButton("=");
+
+    private void initListener(){
+        button0.addActionListener(e -> display.setText(display.getText()+"0"));
+        button1.addActionListener(e -> display.setText(display.getText() + "1"));
+        button2.addActionListener(e -> display.setText(display.getText() + "2"));
+        button3.addActionListener(e -> display.setText(display.getText() + "3"));
+        button4.addActionListener(e -> display.setText(display.getText() + "4"));
+        button5.addActionListener(e -> display.setText(display.getText() + "5"));
+        button6.addActionListener(e -> display.setText(display.getText() + "6"));
+        button7.addActionListener(e -> display.setText(display.getText() + "7"));
+        button8.addActionListener(e -> display.setText(display.getText() + "8"));
+        button9.addActionListener(e -> display.setText(display.getText() + "9"));
+        buttonSum.addActionListener(e -> display.setText(display.getText() + "+"));
+        buttonDel.addActionListener(e -> display.setText(display.getText().substring(0,display.getText().length()-1)));
+        buttonDivide.addActionListener(e -> display.setText(display.getText() + "/"));
+        buttonSub.addActionListener(e -> display.setText(display.getText() + "-"));
+        buttonMul.addActionListener(e -> display.setText(display.getText() + "*"));
+        buttonExp.addActionListener(e -> {
+            String exp = display.getText();
+            if (!exp.matches("^[0-9\\/\\*\\+\\-\\(\\)]*$") ){
+//                System.out.println(true);
+                JOptionPane.showMessageDialog(this, "Typing error","Error",JOptionPane.ERROR_MESSAGE);
+                display.setText("");
+            }else {
+//                System.out.println(false);
+
+            }
+        });
+    }
 }
