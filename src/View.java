@@ -6,6 +6,8 @@ import java.awt.*;
  */
 public class View extends JFrame {
 
+    private Calc calc = new Calc();
+
     public static void main(String[] args) {
         new View();
     }
@@ -21,7 +23,7 @@ public class View extends JFrame {
     private void initFrame(){
         add(display, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
-        add(buttonExp, BorderLayout.SOUTH);
+//        add(buttonExp, BorderLayout.SOUTH);
         buttonPanel.add(button0);
         buttonPanel.add(button1);
         buttonPanel.add(button2);
@@ -37,13 +39,16 @@ public class View extends JFrame {
         buttonPanel.add(buttonMul);
         buttonPanel.add(buttonDel);
         buttonPanel.add(buttonDivide);
+        buttonPanel.add(buttonOpenBracket);
+        buttonPanel.add(buttonCloseBracket);
+        buttonPanel.add(buttonExp);
 //        display.setEnabled(false);
         initListener();
     }
 
     private JTextArea display = new JTextArea();
 
-    private JPanel buttonPanel = new JPanel(new GridLayout(5,3));
+    private JPanel buttonPanel = new JPanel(new GridLayout(6,3));
 
     private JButton button0 = new JButton("0");
 
@@ -77,6 +82,10 @@ public class View extends JFrame {
 
     private JButton buttonExp = new JButton("=");
 
+    private JButton buttonOpenBracket = new JButton("(");
+
+    private JButton buttonCloseBracket = new JButton(")");
+
     private void initListener(){
         button0.addActionListener(e -> display.setText(display.getText()+"0"));
         button1.addActionListener(e -> display.setText(display.getText() + "1"));
@@ -93,6 +102,9 @@ public class View extends JFrame {
         buttonDivide.addActionListener(e -> display.setText(display.getText() + "/"));
         buttonSub.addActionListener(e -> display.setText(display.getText() + "-"));
         buttonMul.addActionListener(e -> display.setText(display.getText() + "*"));
+        buttonOpenBracket.addActionListener(e -> display.setText(display.getText() + "("));
+        buttonCloseBracket.addActionListener(e -> display.setText(display.getText() + ")"));
+
         buttonExp.addActionListener(e -> {
             String exp = display.getText();
             if (!exp.matches("^[0-9\\/\\*\\+\\-\\(\\)]*$") ){
@@ -101,7 +113,8 @@ public class View extends JFrame {
                 display.setText("");
             }else {
 //                System.out.println(false);
-
+                int res = calc.express(exp);
+                display.setText(res +"");
             }
         });
     }
