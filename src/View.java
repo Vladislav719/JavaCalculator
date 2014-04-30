@@ -1,10 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.Timer;
 
 /**
  * Created by vladislav on 30.04.14.
  */
 public class View extends JFrame {
+
+    private java.util.Timer timer = new Timer();
 
     private String memExp = "";
 
@@ -20,12 +26,18 @@ public class View extends JFrame {
         initFrame();
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        timer.schedule(new Inform(this,timer),0,3000);
+    }
+
+    @Deprecated //will be implemented in latest versions @see https://github.com/Vladislav719/JavaCalculator/
+    public void showMsg(){
+        JOptionPane.showMessageDialog(this,"To show extra menu, please press following shortcut \"Ctrl\" + \"R\" ");
     }
 
     private void initFrame() {
         add(display, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.CENTER);
-//        add(buttonExp, BorderLayout.SOUTH);
+        add(buttonExp, BorderLayout.EAST);
         buttonPanel.add(button0);
         buttonPanel.add(button1);
         buttonPanel.add(button2);
